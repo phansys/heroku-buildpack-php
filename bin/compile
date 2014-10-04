@@ -281,6 +281,14 @@ unset COMPOSER_GITHUB_OAUTH_TOKEN
 # install dependencies
 composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction | indent
 
+BUILD_DIR=$1
+APP_DIR='/app'
+
+# hack cache for all envs
+for CACHE_ENV in prod dev 'test'; do
+    CACHE_DIR=$BUILD_DIR/app/cache/$CACHE_ENV
+    rm $BUILD_DIR/app/cache -rf
+done
 composer show --installed heroku/heroku-buildpack-php &> /dev/null && error "Your composer.json requires package 'heroku/heroku-buildpack-php'.
 This package may only be used as a dev dependency (in 'require-dev')!"
 
