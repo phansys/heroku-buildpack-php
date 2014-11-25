@@ -17,6 +17,7 @@ http {
     #gzip  on;
 
     fastcgi_buffers 256 4k;
+    client_max_body_size 500M;
 
     # define an easy to reference name that can be used in fastgi_pass
     upstream heroku-fcgi {
