@@ -1,0 +1,16 @@
+<?php
+$buildDir       = $argv[0];
+$appDir         = $argv[1];
+$metadataFile   = $argv[2];
+
+require $buildDir . '/vendor/autoload.php';
+$instance = require $metadataFile;
+$fileResources = $instance->fileResources;
+
+foreach ($fileResources as $i => $fileResource) {
+    $fileResources[$i] = str_replace($buildDir, $appDir, $fileResource);
+}
+$instance->fileResources = $fileResources;
+
+$serialized = $instance->serialize();
+file_put_contents($metadataFile, $serialized);

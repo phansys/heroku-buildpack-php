@@ -285,9 +285,13 @@ BUILD_DIR=$1
 APP_DIR='/app'
 
 # hack cache for all envs
-#for CACHE_ENV in prod dev 'test'; do
-#    rm $BUILD_DIR/app/cache/$CACHE_ENV/jms_diextra/ -rf
-#done
+for CACHE_ENV in prod; do
+    for metadata_file in $(find $BUILD_DIR/app/cache/$CACHE_ENV/jms_*); do
+        php ./fix-metadata-paths $BUILD_DIR $APP_DIR $metadata_file
+    done
+    find $BUILD_DIR/app/cache/$CACHE_ENV -type f -exec sed -i "s@$BUILD_DIR@$APP_DIR@g" {} \; | indent
+done
+
 composer show --installed heroku/heroku-buildpack-php &> /dev/null && error "Your composer.json requires package 'heroku/heroku-buildpack-php'.
 This package may only be used as a dev dependency (in 'require-dev')!"
 
