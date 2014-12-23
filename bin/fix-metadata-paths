@@ -1,0 +1,21 @@
+<?php
+$buildDir       = $argv[1];
+$appDir         = $argv[2];
+$metadataFile   = $argv[3];
+
+require $buildDir . '/vendor/autoload.php';
+$instance = require $metadataFile;
+if (!is_object($instance)) {
+    echo 'Could not instance serialized data from : ' . $metadataFile . PHP_EOL;
+
+} else {
+    $fileResources = $instance->fileResources;
+
+    foreach ($fileResources as $i => $fileResource) {
+        $fileResources[$i] = str_replace($buildDir, $appDir, $fileResource);
+    }
+    $instance->fileResources = $fileResources;
+
+    $serialized = serialize($instance);
+    file_put_contents($metadataFile, "<?php return unserialize('" . $serialized . "');");
+}
