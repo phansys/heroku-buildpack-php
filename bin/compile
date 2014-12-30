@@ -293,12 +293,14 @@ for pack in $BUILDPACK_DIRS; do
     fi
 done
 
-for CACHE_ENV in dev prod; do
-    for metadata_file in $(find $BUILD_DIR/app/cache/$CACHE_ENV/jms_* -type f -name *.cache.php -not -name EnhancedProxy*); do
+CACHE_DIRS=$(find $BUILD_DIR/app/cache/* -maxdepth 0 -type d)
+
+for CACHE_DIR in CACHE_DIRS; do
+    for metadata_file in $(find $CACHE_DIR/jms_* -type f -name *.cache.php -not -name EnhancedProxy*); do
         php $buildpack/bin/fix-metadata-paths $BUILD_DIR $APP_DIR $metadata_file
     done
 
-    find $BUILD_DIR/app/cache/$CACHE_ENV -type f -not -name *.cache.php -exec sed -i "s@$BUILD_DIR@$APP_DIR@g" {} \; | indent
+    find $CACHE_DIR -type f -not -name *.cache.php -exec sed -i "s@$BUILD_DIR@$APP_DIR@g" {} \; | indent
 done
 
 composer show --installed heroku/heroku-buildpack-php &> /dev/null && error "Your composer.json requires package 'heroku/heroku-buildpack-php'.
