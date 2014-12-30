@@ -295,7 +295,7 @@ done
 
 CACHE_DIRS=$(find $BUILD_DIR/app/cache/* -maxdepth 0 -type d)
 
-for CACHE_DIR in CACHE_DIRS; do
+for CACHE_DIR in $CACHE_DIRS; do
     for metadata_file in $(find $CACHE_DIR/jms_* -type f -name *.cache.php -not -name EnhancedProxy*); do
         php $buildpack/bin/fix-metadata-paths $BUILD_DIR $APP_DIR $metadata_file
     done
